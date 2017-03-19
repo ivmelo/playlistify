@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Playlistify</title>
+
+    <!-- Semantic CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="container" >
+            <h1 class="ui header">
+                <img src="https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg" class="spotify-logo">
+                Playlistify <small>for Spotify</small>
+            </h1>
+
+            <div class="row" v-if="accessToken != null">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for music, artists and abums..."  v-model="queryBox" v-on:keyup.13="search">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" v-on:click="search">Go!</button>
+                        </span>
+                    </div>
+
+                    <br>
+
+                    <ul class="list-group" v-if="tracks.length > 0 && ! isLoading">
+                        <li class="list-group-item" v-for="(track, index) in tracks">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a v-bind:href="track.uri">
+                                        <img v-bind:src="track.album.images[0].url" class="img-fluid">
+                                    </a>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ track.name }}</h5>
+                                        <small>{{ track.explicit ? 'EXPLICIT' : '' }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ track.artists[0].name }}</p>
+                                    <small>{{ track.album.name }}</small>
+                                    <button type="button" class="btn btn-sm btn-success" v-on:click="add(index)">+</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="spinner" v-if="isLoading">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <h3 v-if="! isEditingplaylistName">{{ playlistName }} <button type="button" class="btn btn-sm btn-info" v-on:click="isEditingplaylistName = true">Edit Name</button></h3>
+
+                    <div class="input-group" v-if="isEditingplaylistName">
+                        <input type="text" class="form-control" v-model="playlistName" v-on:keyup.enter="isEditingplaylistName = false">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" v-on:click="isEditingplaylistName = false">Done!</button>
+                        </span>
+                    </div>
+
+
+                    <br>
+                    <template v-if="selectedTracks.length > 0">
+                        <ul class="list-group">
+                            <li class="list-group-item" v-for="(track, index) in selectedTracks">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <a v-bind:href="track.uri">
+                                            <img v-bind:src="track.album.images[0].url" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">{{ track.name }}</h5>
+                                            <small>{{ track.explicit ? 'EXPLICIT' : '' }}</small>
+                                        </div>
+                                        <p class="mb-1">{{ track.artists[0].name }}</p>
+                                        <small>{{ track.album.name }}</small>
+                                        <button type="button" class="btn btn-sm btn-danger" v-on:click="remove(index)">-</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <br>
+                            <button type="button" class="btn btn-success" v-if="selectedTracks.length > 1" v-on:click="checkout()" v-bind:disabled="playlistUrl">{{ savePlaylistButtonLabel }}</button>
+
+                            <br>
+
+                            <div class="list-group" v-if="playlistUrl">
+                                <a class="list-group-item list-group-item-action hide-overflow" v-bind:href="playlistUrl" target="_blank">
+                                    <h3>{{ playlistName }} </h3> <small> by {{ userId }}</small>
+                                    {{ playlistUrl }}
+                                </a>
+                            </div>
+
+                        </ul>
+                    </template>
+
+                    <p v-else="selectedTracks.length > 0">There are currently no tracks in your playlist.</p>
+                </div>
+
+            </div>
+            <div class="card" v-else="accessToken != null">
+                <div class="card-block">
+                    <h3 class="card-title">Log In</h3>
+                    <p class="card-text">
+                        In order to save the playlists to your spotify account,
+                        <br>
+                        first you need to authorize access to your spotify playlists.
+                    </p>
+                    <a class="btn btn-success text-center" v-bind:href="authUrl()">Authorize</a>
+                </div>
+            </div>
+
+            <br>
+            <p class="text-center" v-if="this.userId">Logged in as {{ this.userId }}.</p>
+            <p class="text-center">This is a <a href="https://vuejs.org" target="_blank">VueJS</a> experiment, made by <a href="https://ivmelo.com" target="_blank">Ivanilson Melo</a>.</p>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Vue JS and friends -->
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.0.slim.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+<script src="env.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
