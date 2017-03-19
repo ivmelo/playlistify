@@ -25,7 +25,7 @@ var app = new Vue({
         var params = this.extractParamsFromURIFragment();
 
         // Removes accessToken from url.
-        history.replaceState(null, 'Playlistify', '/');
+        history.replaceState(null, 'Playlistify', window.location.pathname);
 
         if(params['access_token'] != null) {
             this.accessToken = params['access_token'];
