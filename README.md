@@ -1,6 +1,8 @@
 # Playlistify
 Create playlists for Spotify the easy way.
 
+![App Example](http://i.imgur.com/KNvh6kg.png)
+
 ### Why?
 I find the original way to create spotify playlists overly complicated and repetitive. You have to create a playlist, search for songs and then, click on 'Options' > 'Add To Playlist' > 'Your Playlist Name'. That's for each song. Ouch!
 
