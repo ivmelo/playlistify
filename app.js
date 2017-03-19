@@ -136,6 +136,7 @@ var app = new Vue({
             }
         },
         saved: function(data) {
+            this.savePlaylistButtonLabel = 'Saved!';
             this.playlistUrl = 'https://open.spotify.com/user/' + this.userId + '/playlist/' + this.playlistId;
         },
         authUrl: function() {
