@@ -18,6 +18,7 @@ var app = new Vue({
         selectedTracks: [],
         isLoading: false,
         showResults: false,
+        savingOrSaved: false,
     },
     created: function(){
         this.clientId = spotifyClientId;
@@ -44,7 +45,6 @@ var app = new Vue({
     },
     methods: {
         search: function() {
-            this.isLoading = true;
 
             if (this.queryBox == '') {
                 alert('Please type in something to search.');
@@ -52,6 +52,7 @@ var app = new Vue({
                 return;
             } else {
                 this.showResults = true;
+                this.isLoading = true;
             }
 
             if (this.currentQuery === this.queryBox) {
@@ -89,7 +90,13 @@ var app = new Vue({
             console.log(track.preview_url);
         },
         checkout: function() {
-            this.createPlaylist();
+            if (this.playlistName.length > 0) {
+                this.savingOrSaved = true;
+                this.savePlaylistButtonLabel = 'Saving...';
+                this.createPlaylist();
+            } else {
+                alert('You must give a name to your playlist.')
+            }
         },
         extractParamsFromURIFragment: function () {
             var fragmentParams = {};

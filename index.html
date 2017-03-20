@@ -3,8 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>Playlistify</title>
-
-    <!-- Semantic CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -27,7 +25,7 @@
 
                     <br>
 
-                    <ul class="list-group" v-if="tracks.length > 0 && ! isLoading">
+                    <ul class="list-group" v-if="tracks.length > 0">
                         <li class="list-group-item" v-for="(track, index) in tracks">
                             <div class="row">
                                 <div class="col-md-3">
@@ -42,7 +40,7 @@
                                     </div>
                                     <p class="mb-1">{{ track.artists[0].name }}</p>
                                     <small>{{ track.album.name }}</small>
-                                    <button type="button" class="btn btn-sm btn-success" v-on:click="add(index)">+</button>
+                                    <button type="button" class="btn btn-sm btn-success float-right" v-on:click="add(index)">+</button>
                                 </div>
                             </div>
                         </li>
@@ -55,6 +53,8 @@
                         <div class="rect4"></div>
                         <div class="rect5"></div>
                     </div>
+
+                    <button type="button" class="btn btn-info btn-block top-spaced-1" v-if="tracks.length > 0 && ! isLoading" v-on:click="search()">See more...</button>
 
                 </div>
                 <div class="col-md-6">
@@ -71,7 +71,8 @@
                     <br>
                     <template v-if="selectedTracks.length > 0">
                         <ul class="list-group">
-                            <li class="list-group-item" v-for="(track, index) in selectedTracks">
+
+                            <li class="list-group-item" v-for="(track, index) in selectedTracks" v-bind:key="index">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <a v-bind:href="track.uri">
@@ -85,23 +86,23 @@
                                         </div>
                                         <p class="mb-1">{{ track.artists[0].name }}</p>
                                         <small>{{ track.album.name }}</small>
-                                        <button type="button" class="btn btn-sm btn-danger" v-on:click="remove(index)">-</button>
+                                        <button type="button" class="btn btn-sm btn-danger float-right" v-on:click="remove(index)">-</button>
                                     </div>
                                 </div>
                             </li>
-                            <br>
-                            <button type="button" class="btn btn-success" v-if="selectedTracks.length > 1" v-on:click="checkout()" v-bind:disabled="playlistUrl">{{ savePlaylistButtonLabel }}</button>
-
-                            <br>
-
-                            <div class="list-group" v-if="playlistUrl">
-                                <a class="list-group-item list-group-item-action hide-overflow" v-bind:href="playlistUrl" target="_blank">
-                                    <h3>{{ playlistName }} </h3> <small> by {{ userId }}</small>
-                                    {{ playlistUrl }}
-                                </a>
-                            </div>
-
                         </ul>
+
+                        <br>
+                        <button type="button" class="btn btn-success btn-block" v-if="selectedTracks.length > 1" v-on:click="checkout()" v-bind:disabled="savingOrSaved">{{ savePlaylistButtonLabel }}</button>
+                        <br>
+
+                        <div class="list-group" v-if="playlistUrl">
+                            <a class="list-group-item list-group-item-action hide-overflow" v-bind:href="playlistUrl" target="_blank">
+                                <h3>{{ playlistName }} </h3> <small> by {{ userId }}</small>
+                                {{ playlistUrl }}
+                            </a>
+                        </div>
+
                     </template>
 
                     <p v-else="selectedTracks.length > 0">There are currently no tracks in your playlist.</p>

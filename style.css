@@ -10,6 +10,12 @@
 [v-cloak] {
   display: none;
 }
+button.btn {
+    cursor: pointer;
+}
+.top-spaced-1 {
+    margin-top: 1em;
+}
 
 
 /*SPINNERS*/
