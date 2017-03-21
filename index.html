@@ -4,24 +4,36 @@
     <meta charset="utf-8">
     <title>Playlistify</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <script src="https://use.fontawesome.com/47a4b5d58f.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app" v-cloak>
         <div class="container" >
-            <h1 class="ui header">
-                <img src="https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg" class="spotify-logo">
-                Playlistify <small>for Spotify</small>
-            </h1>
+            <div class="row">
+                <div class="col-md-6">
+                    <h1 class="ui header">
+                        <img src="https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg" class="spotify-logo">
+                        Playlistify <small>for Spotify</small>
+                    </h1>
+                </div>
+                <div class="col-md-6">
+                    <div id="player" class="aplayer"></div>
+                </div>
+            </div>
+
 
             <div class="row" v-if="accessToken != null">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for music, artists and abums..."  v-model="queryBox" v-on:keyup.13="search">
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button" v-on:click="search">Go!</button>
-                        </span>
-                    </div>
+                <div class="col-md-6" v-on:submit.prevent="search()">
+                    <form class="" action="index.html" method="post">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for music, artists and abums..."  v-model="queryBox">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit"><span class="fa fa-search"></span></button>
+                            </span>
+                        </div>
+                    </form>
+
 
                     <br>
 
@@ -40,7 +52,10 @@
                                     </div>
                                     <p class="mb-1">{{ track.artists[0].name }}</p>
                                     <small>{{ track.album.name }}</small>
-                                    <button type="button" class="btn btn-sm btn-success float-right" v-on:click="add(index)">+</button>
+                                    <div class="float-right">
+                                        <button type="button" class="btn btn-sm btn-info" v-on:click="playPreview(track)"><span class="fa fa-play"></span></button>&nbsp;
+                                        <button type="button" class="btn btn-sm btn-success float-right" v-on:click="add(index)"><span class="fa fa-plus"></span></button>
+                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -54,19 +69,20 @@
                         <div class="rect5"></div>
                     </div>
 
-                    <button type="button" class="btn btn-info btn-block top-spaced-1" v-if="tracks.length > 0 && ! isLoading" v-on:click="search()">See more...</button>
+                    <button type="button" class="btn btn-info btn-block top-spaced-1" v-if="tracks.length > 0 && ! isLoading" v-on:click="search()">Load more...</button>
 
                 </div>
                 <div class="col-md-6">
-                    <h3 v-if="! isEditingplaylistName">{{ playlistName }} <button type="button" class="btn btn-sm btn-info" v-on:click="isEditingplaylistName = true">Edit Name</button></h3>
+                    <h3 v-if="! isEditingplaylistName">{{ playlistName }} <small>({{ selectedTracks.length }} tracks)</small> <button type="button" class="btn btn-sm btn-info" v-on:click="isEditingplaylistName = true"><span class="fa fa-edit"></span></button></h3>
 
-                    <div class="input-group" v-if="isEditingplaylistName">
-                        <input type="text" class="form-control" v-model="playlistName" v-on:keyup.enter="isEditingplaylistName = false">
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button" v-on:click="isEditingplaylistName = false">Done!</button>
-                        </span>
-                    </div>
-
+                    <form v-on:submit.prevent="finishedEditingPlaylistName()">
+                        <div class="input-group" v-if="isEditingplaylistName">
+                            <input type="text" class="form-control" v-model="playlistName">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit"><span class="fa fa-check"></span></button>
+                            </span>
+                        </div>
+                    </form>
 
                     <br>
                     <template v-if="selectedTracks.length > 0">
@@ -86,14 +102,22 @@
                                         </div>
                                         <p class="mb-1">{{ track.artists[0].name }}</p>
                                         <small>{{ track.album.name }}</small>
-                                        <button type="button" class="btn btn-sm btn-danger float-right" v-on:click="remove(index)">-</button>
+                                        <div class="float-right">
+                                            <button type="button" class="btn btn-sm btn-info" v-on:click="playPreview(track)"><span class="fa fa-play"></span></button>
+                                            <button type="button" class="btn btn-sm btn-danger" v-on:click="remove(index)"><span class="fa fa-minus"></span></button>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
                         </ul>
 
                         <br>
-                        <button type="button" class="btn btn-success btn-block" v-if="selectedTracks.length > 1" v-on:click="checkout()" v-bind:disabled="savingOrSaved">{{ savePlaylistButtonLabel }}</button>
+                        <template>
+                            <div class="form-group" v-if="selectedTracks.length > 1">
+                                <button type="button" class="btn btn-success btn-block" v-on:click="checkout()" v-bind:disabled="savingOrSaved">{{ savePlaylistButtonLabel }}</button>
+                            </div>
+
+                        </template>
                         <br>
 
                         <div class="list-group" v-if="playlistUrl">
@@ -136,6 +160,7 @@
 <script src="https://code.jquery.com/jquery-3.2.0.slim.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/aplayer@1.5.8/dist/APlayer.min.js"></script>
 <script src="env.js"></script>
 <script src="app.js"></script>
 </body>

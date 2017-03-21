@@ -19,14 +19,14 @@ var app = new Vue({
         isLoading: false,
         showResults: false,
         savingOrSaved: false,
+        ap: null,
     },
     created: function(){
         this.clientId = spotifyClientId;
 
         var params = this.extractParamsFromURIFragment();
 
-        // Removes accessToken from url.
-        history.replaceState(null, 'Playlistify', window.location.pathname);
+        // history.replaceState(null, 'Playlistify', window.location.pathname);
 
         if(params['access_token'] != null) {
             this.accessToken = params['access_token'];
@@ -37,7 +37,7 @@ var app = new Vue({
             axios.get('me').then(function(response){
                 app.userId = response.data.id;
             }).catch(function(error){
-                alert('Error, please try again.');
+                alert('Authorization error, please refresh the page and try again.');
             });
         }
 
@@ -142,6 +142,13 @@ var app = new Vue({
                 alert('Not enough songs.');
             }
         },
+        finishedEditingPlaylistName: function() {
+            if(this.playlistName.length > 0) {
+                this.isEditingplaylistName = false;
+            } else {
+                alert('The playlist name cannot be empty.');
+            }
+        },
         saved: function(data) {
             this.savePlaylistButtonLabel = 'Saved!';
             this.playlistUrl = 'https://open.spotify.com/user/' + this.userId + '/playlist/' + this.playlistId;
@@ -159,6 +166,29 @@ var app = new Vue({
             + '&response_type=' + responseType
             + '&redirect_uri=' + redirectUri
             + '&scope=' + scopes;
+        },
+        playPreview: function (track) {
+            console.log(track);
+
+            var music = {
+                title: track.name,
+                author: track.artists[0].name,
+                url: track.preview_url,
+                pic: track.album.images[1].url,
+            };
+
+            this.ap = new APlayer({
+                element: document.getElementById('player'),
+                narrow: false,
+                autoplay: true,
+                showlrc: 0,
+                mutex: true,
+                theme: '#e6d0b2',
+                mode: 'random',
+                preload: 'metadata',
+                listmaxheight: '513px',
+                music: music
+            });
         }
     }
 });
