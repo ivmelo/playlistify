@@ -1,3 +1,7 @@
+/**
+ * Author: Ivanilson Melo
+ * https://github.com/ivmelo
+ */
 var app = new Vue({
     el: '#app',
     data: {

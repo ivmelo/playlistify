@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head lang="en">
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>Playlistify</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
     <script src="https://use.fontawesome.com/47a4b5d58f.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -13,7 +16,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h1 class="ui header">
-                        <img src="https://static1.squarespace.com/static/55d3912ee4b070510b275f77/t/55de32cae4b0054c3d2c0812/1440625355594/spotify+Logo.jpg" class="spotify-logo">
+                        <span class="fa fa-spotify"></span>
                         Playlistify <small>for Spotify</small>
                     </h1>
                 </div>
@@ -116,7 +119,6 @@
                             <div class="form-group" v-if="selectedTracks.length > 1">
                                 <button type="button" class="btn btn-success btn-block" v-on:click="checkout()" v-bind:disabled="savingOrSaved">{{ savePlaylistButtonLabel }}</button>
                             </div>
-
                         </template>
                         <br>
 
@@ -149,19 +151,16 @@
             <p class="text-center" v-if="this.userId">Logged in as {{ this.userId }}.</p>
             <p class="text-center">This is a <a href="https://vuejs.org" target="_blank">VueJS</a> experiment, made by <a href="https://ivmelo.com" target="_blank">Ivanilson Melo</a>.</p>
         </div>
-
     </div>
-</div>
 
-
-<!-- Vue JS and friends -->
-<script src="https://unpkg.com/vue"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.0.slim.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
-<script src="https://unpkg.com/aplayer@1.5.8/dist/APlayer.min.js"></script>
-<script src="env.js"></script>
-<script src="app.js"></script>
+    <!-- Vue JS and friends -->
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.0.slim.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/aplayer@1.5.8/dist/APlayer.min.js"></script>
+    <script src="env.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
