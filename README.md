@@ -3,19 +3,17 @@ The easiest way to create Spotify playlists.
 
 ![App Demo](http://i.imgur.com/JWrVHX9.png)
 
-[http://ivmelo.com/playlistify/](http://ivmelo.com/playlistify)
-
 ### Why did you build this???
 I find the original way to create Spotify playlists overly complicated and repetitive. First you have to create a playlist, search for songs and then, click on 'Options' > 'Add To Playlist' > 'Your Playlist Name'. That's for each song. Ouch!
 
-Doing those steps several times is very slow (not to mention boring), so I decided to create an app to add the songs with a single click, and after adding all of the songs, you can just save your playlist.
+Doing those steps several times is very slow (not to mention boring), so I decided to create an app where you can add songs with a single click, and after that, you can just save your playlist.
 
 Think of it as a shopping cart for Spotify songs, where the checkout basically saves your playlist.
 
 DISCLOSURE: This is my first VueJS app and I'm pretty sure there are better ways to do some of the things I've done here. I'm still learning Vue, so take it easy.
 
 ### How do I run it locally?
-First you have to create a [Spotify App](spotify developers).
+First you have to create a [Spotify App](https://developer.spotify.com).
 
 ```
 git clone git@github.com:ivmelo/playlistify.git
@@ -27,10 +25,10 @@ Edit env.js and add your app's client id.
 php -S localhost:8000
 ```
 
-In this example I used PHP's built-in web server. But you can use any web server you want, or host it anywhere.
+In this example I used the PHP CLI built-in web server to run the app localy. But you can use any web server you want, or host it anywhere. All of the magic happens on the client side.
 
-### How can I just use it?
-Just head to [http://ivmelo.com/playlistify/](http://ivmelo.com/playlistify).
+### But I just want to use it
+Cool, just head to [https://ivmelo.com/playlistify/](https://ivmelo.com/playlistify) and enjoy.
 
 ### License
 The MIT License (MIT)
