@@ -28,7 +28,7 @@ php -S localhost:8000
 In this example I used the PHP CLI built-in web server to run the app localy. But you can use any web server you want, or host it anywhere. All of the magic happens on the client side.
 
 ### But I just want to use it
-Cool, just head to [https://ivmelo.com/playlistify/](https://ivmelo.com/playlistify) and enjoy.
+Cool, just head to [https://ivmelo.me/playlistify/](https://ivmelo.me/playlistify) and enjoy.
 
 ### License
 The MIT License (MIT)
